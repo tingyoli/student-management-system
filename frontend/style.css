@@ -1,0 +1,68 @@
+body {
+  background-color: #f4f6f9;
+}
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+}
+
+table {
+  background-color: white;
+}
+
+/* =========================
+   Dark Mode
+========================= */
+
+.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-mode .card {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-mode table {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-mode .table {
+  color: white;
+}
+
+.dark-mode .modal-content {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-mode input,
+.dark-mode select {
+  background-color: #2b2b2b;
+  color: white;
+  border: 1px solid #555;
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select {
+  background-color: #2b2b2b;
+  color: white;
+}
+
+.dark-mode .page-link {
+  background-color: #1e1e1e;
+  color: white;
+  border-color: #444;
+}
