@@ -9,13 +9,13 @@ const token = localStorage.getItem("token");
 
 if (!token) {
 
-  alert("請先登入");
-
-  window.location.href = "login.html";
+window.location.replace = "login.html";
 
 }
 let allStudents = [];
+
 const tableBody = document.getElementById("studentTableBody");
+
 
 
 // 取得學生資料
@@ -167,7 +167,7 @@ async function addStudent() {
 
     const result = await response.json();
 
-    alert(result.message);
+    showToast(result.message, "success");
 
     // 重新載入資料
     getStudents();
@@ -204,7 +204,7 @@ async function deleteStudent(id) {
 
     const result = await response.json();
 
-    alert(result.message);
+    showToast(result.message, "success");
 
     // 重新載入資料
     getStudents();
@@ -275,7 +275,7 @@ async function editStudent(id) {
       }
     );
 
-    alert("更新成功");
+    showToast("更新成功", "success" );
 
     getStudents();
 
@@ -637,3 +637,50 @@ window.onload = () => {
 
 };
 
+// =========================
+// Toast Notification
+// =========================
+
+function showToast(
+  message,
+  type = "success"
+) {
+
+  const toastElement =
+    document.getElementById(
+      "liveToast"
+    );
+
+  const toastMessage =
+    document.getElementById(
+      "toastMessage"
+    );
+
+  // 訊息
+  toastMessage.innerText = message;
+
+  // 顏色
+  toastElement.className =
+    `toast align-items-center text-bg-${type} border-0`;
+
+  // Bootstrap Toast
+  const toast =
+    new bootstrap.Toast(
+      toastElement
+    );
+
+  toast.show();
+
+}
+
+function logout() {
+
+  localStorage.removeItem("token");
+
+  showToast("已成功登出", "success");
+
+  setTimeout(() => {
+    window.location.replace("login.html");
+  }, 300);
+
+}
