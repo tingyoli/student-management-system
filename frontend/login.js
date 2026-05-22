@@ -76,6 +76,7 @@ async function login() {
 
 
     const result = await response.json();
+    console.log(result);
     // 登入失敗
     if (!response.ok) {
 
