@@ -1,8 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-
+require("dotenv").config();
 require("./db");
 
+const express = require("express");
+const cors = require("cors");
 const studentRoutes = require("./routes/students");
 const authRoutes = require("./routes/auth");
 

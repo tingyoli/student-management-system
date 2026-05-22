@@ -29,7 +29,7 @@ async function getStudents() {
   try {
 
     const response = await fetch(
-      "http://localhost:3000/students",
+      "https://student-management-system-9whg.onrender.com/students",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -192,7 +192,7 @@ async function addStudent() {
 
     const response = await fetch(
       
-  "http://localhost:3000/students",
+  "https://student-management-system-9whg.onrender.com/students",
    { method: "POST",
      headers: 
     {
@@ -231,7 +231,7 @@ async function deleteStudent(id) {
   try {
 
     const response = await fetch(
-      `http://localhost:3000/students/${id}`,
+      `https://student-management-system-9whg.onrender.com/students/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -259,7 +259,7 @@ async function deleteStudent(id) {
 async function openEditModal(id) {
   try {
     const response = await fetch(
-      `http://localhost:3000/students/${id}`,
+      `https://student-management-system-9whg.onrender.com/students/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -304,7 +304,7 @@ async function updateStudent() {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/students/${id}`,
+      `https://student-management-system-9whg.onrender.com/students/${id}`,
       {
         method: "PUT",
 

@@ -59,7 +59,7 @@ async function login() {
   try {
 
     const response = await fetch(
-      "http://localhost:3000/auth/login",
+      "https://student-management-system-9whg.onrender.com/auth/login",
       {
         method: "POST",
 
