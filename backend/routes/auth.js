@@ -19,9 +19,15 @@ router.post("/login", (req, res) => {
   db.query(sql, [username], (err, result) => {
 
     if (err) {
-      res.status(500).json(err);
-      return;
-    }
+  console.log("Login SQL error:", err);
+
+  res.status(500).json({
+    message: "資料庫查詢失敗",
+    error: err.message,
+  });
+
+  return;
+}
 
     if (result.length === 0) {
 
