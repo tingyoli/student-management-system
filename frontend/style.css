@@ -1,6 +1,17 @@
+body,
+.card,
+.table,
+.modal-content,
+.form-control {
+
+  transition: all 0.3s ease;
+
+}
+
 body {
   background-color: #f4f6f9;
 }
+
 
 .sidebar {
   width: 250px;
@@ -24,45 +35,98 @@ table {
    Dark Mode
 ========================= */
 
+/* =========================
+   Dark Mode
+========================= */
+
 .dark-mode {
+
   background-color: #121212;
   color: white;
+
 }
 
+
+/* Card */
 .dark-mode .card {
+
   background-color: #1e1e1e;
   color: white;
+
 }
 
+
+/* Table */
 .dark-mode table {
-  background-color: #1e1e1e;
+
   color: white;
+
 }
 
 .dark-mode .table {
-  color: white;
+
+  background-color: #1e1e1e;
+
 }
 
-.dark-mode .modal-content {
+.dark-mode .table th {
+
+  background-color: #2c2c2c;
+  color: white;
+
+}
+
+.dark-mode .table td {
+
   background-color: #1e1e1e;
   color: white;
+
 }
 
-.dark-mode input,
-.dark-mode select {
-  background-color: #2b2b2b;
+
+/* Input */
+.dark-mode .form-control {
+
+  background-color: #2c2c2c;
   color: white;
   border: 1px solid #555;
+
 }
 
-.dark-mode .form-control,
-.dark-mode .form-select {
-  background-color: #2b2b2b;
-  color: white;
+.dark-mode .form-control::placeholder {
+
+  color: #aaa;
+
 }
 
-.dark-mode .page-link {
+
+/* Modal */
+.dark-mode .modal-content {
+
   background-color: #1e1e1e;
   color: white;
-  border-color: #444;
+
+}
+
+
+/* Pagination */
+.dark-mode .btn-outline-primary {
+
+  color: white;
+  border-color: #777;
+
+}
+
+.dark-mode .btn-outline-primary:hover {
+
+  background-color: #444;
+
+}
+
+
+/* Toast */
+.dark-mode .toast {
+
+  color: white;
+
 }

@@ -8,40 +8,54 @@ const db = require("../db");
 // GET ALL STUDENTS
 // ========================
 router.get("/", verifyToken, (req, res) => {
+
   const sql = "SELECT * FROM students";
 
   db.query(sql, (err, result) => {
+
     if (err) {
       res.status(500).json(err);
       return;
     }
 
     res.json(result);
+
   });
+
 });
 
 
 // ========================
 // GET SINGLE STUDENT
 // ========================
-router.get("/:id",verifyToken, (req, res) => {
-  const sql = "SELECT * FROM students WHERE id = ?";
+router.get("/:student_id", verifyToken, (req, res) => {
 
-  db.query(sql, [req.params.id], (err, result) => {
-    if (err) {
-      res.status(500).json(err);
-      return;
+  const sql =
+    "SELECT * FROM students WHERE id = ?";
+
+  db.query(
+    sql,
+    [req.params.student_id],
+    (err, result) => {
+
+      if (err) {
+        res.status(500).json(err);
+        return;
+      }
+
+      res.json(result);
+
     }
+  );
 
-    res.json(result);
-  });
 });
 
 
 // ========================
 // ADD STUDENT
 // ========================
-router.post("/" ,verifyToken, (req, res) => {
+router.post("/", verifyToken, (req, res) => {
+
   const sql = `
     INSERT INTO students
     (student_id, name, gender, email, phone, department)
@@ -58,6 +72,7 @@ router.post("/" ,verifyToken, (req, res) => {
   ];
 
   db.query(sql, values, (err, result) => {
+
     if (err) {
       res.status(500).json(err);
       return;
@@ -66,7 +81,9 @@ router.post("/" ,verifyToken, (req, res) => {
     res.json({
       message: "Student added successfully",
     });
+
   });
+
 });
 
 
@@ -74,6 +91,7 @@ router.post("/" ,verifyToken, (req, res) => {
 // UPDATE STUDENT
 // ========================
 router.put("/:id", verifyToken, (req, res) => {
+
   const sql = `
     UPDATE students
     SET
@@ -97,6 +115,7 @@ router.put("/:id", verifyToken, (req, res) => {
   ];
 
   db.query(sql, values, (err, result) => {
+
     if (err) {
       res.status(500).json(err);
       return;
@@ -105,7 +124,9 @@ router.put("/:id", verifyToken, (req, res) => {
     res.json({
       message: "Student updated successfully",
     });
+
   });
+
 });
 
 
@@ -113,18 +134,27 @@ router.put("/:id", verifyToken, (req, res) => {
 // DELETE STUDENT
 // ========================
 router.delete("/:id", verifyToken, (req, res) => {
-  const sql = "DELETE FROM students WHERE id = ?";
 
-  db.query(sql, [req.params.id], (err, result) => {
-    if (err) {
-      res.status(500).json(err);
-      return;
+  const sql =
+    "DELETE FROM students WHERE id = ?";
+
+  db.query(
+    sql,
+    [req.params. id],
+    (err, result) => {
+
+      if (err) {
+        res.status(500).json(err);
+        return;
+      }
+
+      res.json({
+        message: "Student deleted successfully",
+      });
+
     }
+  );
 
-    res.json({
-      message: "Student deleted successfully",
-    });
-  });
 });
 
 module.exports = router;

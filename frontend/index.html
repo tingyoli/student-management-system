@@ -11,7 +11,7 @@
   >
 
   <title>
-    Student Management System
+    學生管理系統
   </title>
 
   <!-- Bootstrap CSS -->
@@ -28,291 +28,323 @@
 
 </head>
 
+
 <body>
 
-<div class="d-flex">
+  <div class="d-flex">
 
-  <!-- Sidebar -->
-  <div class="sidebar bg-dark text-white p-3">
+    <!-- ===================== -->
+    <!-- 側面控制系統 -->
+    <!-- ===================== -->
+    <div
+      class="bg-dark text-white p-3"
+      style="
+        width: 250px;
+        min-height: 100vh;
+      "
+    >
 
-    <h3 class="mb-4">
-      SMS
-    </h3>
-    <li class="nav-item mt-4">
+      <h3 class="mb-4">
+        學生系統
+      </h3>
 
-  <button
-    class="btn btn-danger w-100"
-    onclick="logout()"
-  >
-    Logout
-  </button>
+      <ul class="nav flex-column gap-2">
 
-</li>
+        <!-- 登出 -->
+        <li>
 
-    <ul class="nav flex-column">
+          <button
+            class="btn btn-danger w-100"
+            onclick="logout()"
+          >
+            登出
+          </button>
 
-      <li class="nav-item mb-2">
-        <a
-          class="nav-link text-white"
-          href="#"
-        >
-          Dashboard
-        </a>
-      </li>
+        </li>
 
-      <li class="nav-item mb-2">
-        <a
-          class="nav-link text-white"
-          href="#"
-        >
+
+        <!-- Dashboard -->
+        <li>
+
+          <button
+            class="btn btn-outline-light w-100 text-start"
+            onclick="showSection('dashboardSection')"
+          >
+            管理板
+          </button>
+
+        </li>
+
+
+        <!-- Student -->
+        <li>
+
+          <button
+            class="btn btn-outline-light w-100 text-start"
+            onclick="showSection('studentSection')"
+          >
+            學生管理
+          </button>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+
+    <!-- ===================== -->
+    <!-- Main Content -->
+    <!-- ===================== -->
+    <div class="main-content p-4 flex-grow-1">
+
+
+      <!-- ===================== -->
+      <!-- 數據統計 -->
+      <!-- ===================== -->
+      <div
+        id="dashboardSection"
+        class="content-section"
+      >
+
+        <h1 class="mb-4">
+          數據統計
+        </h1>
+
+        <!-- 男女比例 -->
+        <div class="row mb-4">
+
+          <!-- Total -->
+          <div class="col-md-4">
+
+            <div class="card shadow">
+
+              <div class="card-body">
+
+                <h5>學生總數</h5>
+
+                <h2 id="totalStudents">
+                  0
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Male -->
+          <div class="col-md-4">
+
+            <div class="card shadow">
+
+              <div class="card-body">
+
+                <h5>男性學生</h5>
+
+                <h2 id="maleStudents">
+                  0
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Female -->
+          <div class="col-md-4">
+
+            <div class="card shadow">
+
+              <div class="card-body">
+
+                <h5>女性學生</h5>
+
+                <h2 id="femaleStudents">
+                  0
+                </h2>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- 科系分析 -->
+        <div class="row mb-4">
+
+          <!-- Gender Chart -->
+          <div class="col-md-6">
+
+            <div class="card shadow">
+
+              <div class="card-body">
+
+                <h5 class="mb-3">
+                  男女比例分析
+                </h5>
+
+                <canvas id="genderChart"></canvas>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Department Chart -->
+          <div class="col-md-6">
+
+            <div class="card shadow">
+
+              <div class="card-body">
+
+                <h5 class="mb-3">
+                  科系統計分析
+                </h5>
+
+                <canvas id="departmentChart"></canvas>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ===================== -->
+      <!-- 學生管理 -->
+      <!-- ===================== -->
+      <div
+        id="studentSection"
+        class="content-section"
+      >
+
+        <h1 class="mb-4">
           學生管理
-        </a>
-      </li>
-
-    </ul>
-
-  </div>
+        </h1>
 
 
-  <!-- Main Content -->
-  <div class="main-content p-4">
+        <!-- Top Bar -->
+        <div
+          class="
+            d-flex
+            justify-content-between
+            align-items-center
+            mb-4
+            flex-wrap
+            gap-3
+          "
+        >
+           
 
-    <h1 class="mb-4">
-      Student Management System
-    </h1>
-
-
-    <!-- Dashboard Cards -->
-    <div class="row mb-4">
-
-      <!-- Total Students -->
-      <div class="col-md-4">
-
-        <div class="card shadow">
-
-          <div class="card-body">
-
-            <h5>
-              學生總數
-            </h5>
-
-            <h2 id="totalStudents">
-              0
-            </h2>
-
-          </div>
-
-        </div>
-
-      </div>
+          <!-- Search -->
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="搜尋學生..."
+            onkeyup="searchStudents()"
+            style="width: 220px;"
+          >
+          
 
 
-      <!-- Male Students -->
-      <div class="col-md-4">
+          <div class="d-flex gap-2 flex-wrap">
 
-        <div class="card shadow">
+            <!-- Dark Mode -->
+            <button
+              class="btn btn-dark"
+              onclick="toggleDarkMode()"
+            >
+              🌙
+            </button>
 
-          <div class="card-body">
+            <!-- Export Excel -->
+            <button
+              class="btn btn-success"
+              onclick="exportExcel()"
+            >
+              匯出 Excel
+            </button>
 
-            <h5>
-              男性學生
-            </h5>
+            <!-- Export PDF -->
+            <button
+              class="btn btn-danger"
+              onclick="exportPDF()"
+            >
+              匯出 PDF
+            </button>
 
-            <h2 id="maleStudents">
-              0
-            </h2>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- Female Students -->
-      <div class="col-md-4">
-
-        <div class="card shadow">
-
-          <div class="card-body">
-
-            <h5>
-              女性學生
-            </h5>
-
-            <h2 id="femaleStudents">
-              0
-            </h2>
+            <!-- Add Student -->
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#addStudentModal"
+            >
+              + 新增學生
+            </button>
 
           </div>
 
         </div>
 
-      </div>
 
-    </div>
+        <!-- Student Table -->
+        <table class="table table-bordered table-hover shadow">
 
+          <thead class="table-dark">
 
-    
-     <!-- Charts -->
-<div class="row mb-4">
+            <tr>
 
-  <!-- Gender Chart -->
-  <div class="col-md-6">
+              <th>學號</th>
+              <th>姓名</th>
+              <th>性別</th>
+              <th>Email</th>
+              <th>電話</th>
+              <th>科系</th>
+              <th>操作</th>
 
-    <div class="card shadow">
+              
 
-      <div class="card-body">
+            </tr>
 
-        <h5 class="mb-3">
-          男女比例分析
-        </h5>
+          </thead>
 
-        <canvas id="genderChart"></canvas>
-
-      </div>
-
-    </div>
-
-  </div>
+          <tbody id="studentTableBody">
 
 
-  <!-- Department Chart -->
-  <div class="col-md-6">
+          </tbody>
 
-    <div class="card shadow">
-
-      <div class="card-body">
-
-        <h5 class="mb-3">
-          科系統計分析
-        </h5>
-
-        <canvas id="departmentChart"></canvas>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-   <!-- Top Bar -->
-<div class="d-flex justify-content-between align-items-center mb-3">
-
-  <h2>
-    學生列表
-  </h2>
+        </table>
 
 
-  <!-- Search -->
-  <div>
+        <!-- Pagination -->
+        <nav class="mt-4">
 
-    <input
-      type="text"
-      id="searchInput"
-      class="form-control"
-      placeholder="搜尋學生..."
-      onkeyup="searchStudents()"
-    >
+          <ul
+            class="pagination justify-content-center"
+            id="pagination"
+          >
 
-  </div>
+          </ul>
 
-
-  <!-- Buttons -->
-  <div class="d-flex gap-2">
-
-    <!-- Dark Mode -->
-  <button
-    class="btn btn-dark"
-    onclick="toggleDarkMode()"
-  >
-    Dark Mode
-  </button>
-
-    <!-- Export Excel -->
-    <button
-      class="btn btn-success"
-      onclick="exportExcel()"
-    >
-      匯出 Excel
-    </button>
-
-    </button>
-
-
-  <!-- Export PDF -->
-  <button
-    class="btn btn-danger"
-    onclick="exportPDF()"
-  >
-    匯出 PDF
-  </button>
-
-
-
-    <!-- Add Student -->
-    <button
-      class="btn btn-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#addStudentModal"
-    >
-      新增學生
-    </button>
-
-  </div>
-
-</div>
-
-
-    <!-- Student Table -->
-    <table class="table table-bordered table-hover shadow">
-
-      <thead class="table-dark">
-
-        <tr>
-
-          <th>ID</th>
-          <th>學號</th>
-          <th>姓名</th>
-          <th>性別</th>
-          <th>Email</th>
-          <th>電話</th>
-          <th>科系</th>
-          <th>操作</th>
-
-        </tr>
-
-      </thead>
-
-      <tbody id="studentTableBody">
-
-      </tbody>
-
-    </table>
-    <!-- Pagination -->
-<nav class="mt-4">
-
-  <ul
-    class="pagination justify-content-center"
-    id="pagination"
-  >
-
-  </ul>
-
-</nav>
-
-  </div>
-
-</div>
-
-
-<!-- Add Student Modal -->
-<div
-  class="modal fade"
-  id="addStudentModal"
-  tabindex="-1"
->
+        </nav>
+        <!-- Add Student Modal -->
+        <div
+        class="modal fade"
+        id="addStudentModal"
+        tabindex="-1">
 
   <div class="modal-dialog">
 
@@ -421,12 +453,47 @@
             <label class="form-label">
               科系
             </label>
+            <select
+            id="department"
+            class="form-select"
+            required>
 
-            <input
-              type="text"
-              class="form-control"
-              id="department"
-            >
+            <option value="">
+              請選擇科系
+            </option>
+
+            <option value="資訊工程系">
+              資訊工程系
+            </option>
+
+            <option value="電機工程系">
+              電機工程系
+            </option>
+
+            <option value="企業管理系">
+              企業管理系
+            </option>
+
+            <option value="財務金融系">
+              財務金融系
+            </option>
+
+            <option value="機械工程系">
+              機械工程系
+            </option>
+
+            <option value="應用外語系">
+              應用外語系
+            </option>
+
+            <option value="資訊管理系">
+              資訊管理系
+            </option>
+
+            </select>
+
+
+            
 
           </div>
 
@@ -460,7 +527,103 @@
 
   </div>
 
-</div>
+        </div>
+
+        <!-- Edit Student Modal -->
+        <div
+  class="modal fade"
+  id="editStudentModal"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">編輯學生</h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" id="edit_id">
+
+        <div class="mb-3">
+          <label class="form-label">學號</label>
+          <input type="text" class="form-control" id="edit_student_id">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">姓名</label>
+          <input type="text" class="form-control" id="edit_name">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">性別</label>
+          <select class="form-select" id="edit_gender">
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" id="edit_email">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">電話</label>
+          <input type="text" class="form-control" id="edit_phone">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">科系</label>
+          <select class="form-select" id="edit_department">
+            <option value="資訊工程系">資訊工程系</option>
+            <option value="電機工程系">電機工程系</option>
+            <option value="企業管理系">企業管理系</option>
+            <option value="財務金融系">財務金融系</option>
+            <option value="機械工程系">機械工程系</option>
+            <option value="應用外語系">應用外語系</option>
+            <option value="資訊管理系">資訊管理系</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          關閉
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="updateStudent()"
+        >
+          儲存修改
+        </button>
+      </div>
+
+    </div>
+  </div>
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
 
 <!-- Toast Container -->
 <div
@@ -512,9 +675,11 @@ src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.j
 <!-- AutoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
+<!-- Chinese label -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <!-- Custom JS -->
 <script src="app.js"></script>
-
 </body>
 
 </html>

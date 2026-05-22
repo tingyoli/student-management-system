@@ -1,18 +1,23 @@
 let genderChart;
 let departmentChart;
 let currentPage = 1;
+let allStudents = [];
+let filteredStudents = [];
 
-const rowsPerPage = 5;
+const studentsPerPage = 10;
+
+
+
 
 // 檢查是否已登入
 const token = localStorage.getItem("token");
 
+// 沒 token 就回登入頁
 if (!token) {
+  localStorage.removeItem("token");
 
-window.location.replace = "login.html";
-
+  window.location.href = "login.html";
 }
-let allStudents = [];
 
 const tableBody = document.getElementById("studentTableBody");
 
@@ -24,21 +29,40 @@ async function getStudents() {
   try {
 
     const response = await fetch(
-  "http://localhost:3000/students",
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
+      "http://localhost:3000/students",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 401) {
 
-    const students = await response.json();
+  alert("登入已過期，請重新登入");
 
+  localStorage.removeItem("token");
+
+  window.location.href = "login.html";
+
+  return;
+}
+
+    const students =
+      await response.json();
+
+    // 全部資料
     allStudents = students;
 
-    displayStudents(students);
+    // 預設顯示資料
+    filteredStudents = students;
 
-    updateDashboard(students);
+    // 顯示表格
+    displayStudents();
+
+    // 更新 Dashboard
+    updateDashboard(
+      filteredStudents
+    );
 
   } catch (error) {
 
@@ -50,7 +74,7 @@ async function getStudents() {
 
 
 // 顯示學生資料
-function displayStudents(students) {
+function displayStudents() {
 
   const tableBody =
     document.getElementById(
@@ -59,77 +83,91 @@ function displayStudents(students) {
 
   tableBody.innerHTML = "";
 
-
-  // =========================
   // Pagination
-  // =========================
-
   const start =
-    (currentPage - 1) * rowsPerPage;
+    (currentPage - 1)
+    * studentsPerPage;
 
   const end =
-    start + rowsPerPage;
+    start + studentsPerPage;
 
-  const paginatedStudents =
-    students.slice(start, end);
+  const studentsToShow =
+    filteredStudents.slice(
+      start,
+      end
+    );
 
+  studentsToShow.forEach(
+    (student) => {
 
-  // =========================
-  // Render Table
-  // =========================
+      tableBody.innerHTML += `
 
-  paginatedStudents.forEach((student) => {
+        <tr>
 
-    tableBody.innerHTML += `
+          <td>${student.student_id}</td>
 
-      <tr>
+          <td>${student.name}</td>
 
-        <td>${student.id}</td>
+          <td>${student.gender}</td>
 
-        <td>${student.student_id}</td>
+          <td>${student.email}</td>
 
-        <td>${student.name}</td>
+          <td>${student.phone}</td>
 
-        <td>${student.gender}</td>
+          
+          <td>${student.department}</td>
 
-        <td>${student.email}</td>
+          <td>
 
-        <td>${student.phone}</td>
+            <button
+              class="btn btn-warning btn-sm"
+              onclick="openEditModal(${student.id})"
+            > 
+              編輯
+            </button>
 
-        <td>${student.department}</td>
+            <button
+              class="btn btn-danger btn-sm"
+              onclick="deleteStudent(${student.id})"
+            >
+              刪除
+              </button>
 
-        <td>
+          </td>
 
-          <button
-            class="btn btn-warning btn-sm"
-            onclick="editStudent(${student.id})"
-          >
-            編輯
-          </button>
+        </tr>
 
-          <button
-            class="btn btn-danger btn-sm"
-            onclick="deleteStudent(${student.id})"
-          >
-            刪除
-          </button>
+      `;
 
-        </td>
+    });
 
-      </tr>
-
-    `;
-
-  });
-
-
-  renderPagination(students);
+  renderPagination();
 
 }
 
 
 // 初始化
-getStudents();
+window.onload = () => {
+
+  const darkMode =
+    localStorage.getItem(
+      "darkMode"
+    );
+
+  if (
+    darkMode === "enabled"
+  ) {
+
+    document.body.classList.add(
+      "dark-mode"
+    );
+
+  }
+
+  showSection("studentSection");
+  getStudents();
+
+};
 
 // 新增學生
 async function addStudent() {
@@ -218,11 +256,8 @@ async function deleteStudent(id) {
 }
 
 // 編輯學生
-async function editStudent(id) {
-
+async function openEditModal(id) {
   try {
-
-    // 取得單一學生資料
     const response = await fetch(
       `http://localhost:3000/students/${id}`,
       {
@@ -233,35 +268,42 @@ async function editStudent(id) {
     );
 
     const data = await response.json();
-
     const student = data[0];
 
-    // prompt 編輯
-    const newName = prompt(
-      "請輸入新的姓名",
-      student.name
+    document.getElementById("edit_id").value = student.id;
+    document.getElementById("edit_student_id").value = student.student_id;
+    document.getElementById("edit_name").value = student.name;
+    document.getElementById("edit_gender").value = student.gender;
+    document.getElementById("edit_email").value = student.email;
+    document.getElementById("edit_phone").value = student.phone;
+    document.getElementById("edit_department").value = student.department;
+
+    const editModal = new bootstrap.Modal(
+      document.getElementById("editStudentModal")
     );
 
-    if (newName === null) return;
+    editModal.show();
 
-    const updatedData = {
+  } catch (error) {
+    console.log(error);
+    showToast("讀取學生資料失敗", "danger");
+  }
+}
 
-      student_id: student.student_id,
+async function updateStudent() {
+  const id = document.getElementById("edit_id").value;
 
-      name: newName,
+  const updatedData = {
+    student_id: document.getElementById("edit_student_id").value,
+    name: document.getElementById("edit_name").value,
+    gender: document.getElementById("edit_gender").value,
+    email: document.getElementById("edit_email").value,
+    phone: document.getElementById("edit_phone").value,
+    department: document.getElementById("edit_department").value,
+  };
 
-      gender: student.gender,
-
-      email: student.email,
-
-      phone: student.phone,
-
-      department: student.department,
-
-    };
-
-    // 更新資料
-    await fetch(
+  try {
+    const response = await fetch(
       `http://localhost:3000/students/${id}`,
       {
         method: "PUT",
@@ -275,18 +317,86 @@ async function editStudent(id) {
       }
     );
 
-    showToast("更新成功", "success" );
+    const result = await response.json();
+
+    showToast(result.message, "success");
+
+    const modalElement =
+      document.getElementById("editStudentModal");
+
+    const modal =
+      bootstrap.Modal.getInstance(modalElement);
+
+    modal.hide();
 
     getStudents();
 
   } catch (error) {
-
     console.log(error);
-
+    showToast("更新失敗", "danger");
   }
+}
+// 查詢學生
+function searchStudents() {
+
+  const keyword =
+    document
+      .getElementById(
+        "searchInput"
+      )
+      .value
+      .toLowerCase();
+
+  filteredStudents =
+    allStudents.filter(
+      (student) => {
+
+        return (
+
+          (student.name || "")
+            .toLowerCase()
+            .includes(keyword)
+
+          ||
+
+          (student.department || "")
+            .toLowerCase()
+            .includes(keyword)
+
+          ||
+
+          (student.gender || "")
+            .toLowerCase()
+            .includes(keyword)
+
+          ||
+
+          (student.email || "")
+            .toLowerCase()
+            .includes(keyword)
+
+          ||
+
+          (student.phone || "")
+            .toLowerCase()
+            .includes(keyword)
+
+        );
+
+      }
+    );
+
+  currentPage = 1;
+
+  displayStudents();
+
+  updateDashboard(
+    filteredStudents
+  );
 
 }
 
+// 更新 Dashboard
 function updateDashboard(students) {
 
   // ========================
@@ -416,22 +526,70 @@ function updateDashboard(students) {
 // 匯出 Excel
 function exportExcel() {
 
-  // 轉成 worksheet
-  const worksheet = XLSX.utils.json_to_sheet(
-    allStudents
-  );
+  // 取得表格資料
+  const rows =
+    document.querySelectorAll(
+      "table tbody tr"
+    );
+
+  let data = [];
+
+  // 標題列
+  data.push([
+    "ID",
+    "姓名",
+    "年齡",
+    "性別",
+    "科系"
+  ]);
+
+  // 資料列
+  rows.forEach((row) => {
+
+    const cols =
+      row.querySelectorAll("td");
+
+    if (cols.length > 0) {
+
+      data.push([
+
+        cols[0].innerText,
+        cols[1].innerText,
+        cols[2].innerText,
+        cols[3].innerText,
+        cols[4].innerText
+
+      ]);
+
+    }
+
+  });
+
+  // 建立 worksheet
+  const worksheet =
+    XLSX.utils.aoa_to_sheet(data);
+
+    worksheet["!cols"] = [
+
+  { wch: 10 },
+  { wch: 20 },
+  { wch: 10 },
+  { wch: 10 },
+  { wch: 25 }
+
+];
 
   // 建立 workbook
-  const workbook = XLSX.utils.book_new();
+  const workbook =
+    XLSX.utils.book_new();
 
-  // 加入 worksheet
   XLSX.utils.book_append_sheet(
     workbook,
     worksheet,
     "Students"
   );
 
-  // 下載 Excel
+  // 匯出
   XLSX.writeFile(
     workbook,
     "students.xlsx"
@@ -440,66 +598,76 @@ function exportExcel() {
 }
 
 // 匯出 PDF
-function exportPDF() {
+async function exportPDF() {
 
-  // jsPDF
-  const { jsPDF } = window.jspdf;
+  const element =
+    document.querySelector("table");
 
-  const doc = new jsPDF();
+  const canvas =
+    await html2canvas(element);
 
-  // 標題
-  doc.text(
-    "Student Management Report",
-    14,
-    15
+  const imgData =
+    canvas.toDataURL("image/png");
+
+  const { jsPDF } =
+    window.jspdf;
+
+  const pdf =
+    new jsPDF();
+
+  const imgWidth = 190;
+
+  const pageHeight = 295;
+
+  const imgHeight =
+    canvas.height *
+    imgWidth /
+    canvas.width;
+
+  let heightLeft =
+    imgHeight;
+
+  let position = 10;
+
+  pdf.addImage(
+    imgData,
+    "PNG",
+    10,
+    position,
+    imgWidth,
+    imgHeight
   );
 
-  // 表格資料
-  const tableData = allStudents.map(
-    (student) => [
+  heightLeft -= pageHeight;
 
-      student.id,
-      student.student_id,
-      student.name,
-      student.gender,
-      student.email,
-      student.phone,
-      student.department,
+  while (heightLeft >= 0) {
 
-    ]
+    position =
+      heightLeft - imgHeight;
+
+    pdf.addPage();
+
+    pdf.addImage(
+      imgData,
+      "PNG",
+      10,
+      position,
+      imgWidth,
+      imgHeight
+    );
+
+    heightLeft -= pageHeight;
+
+  }
+
+  pdf.save(
+    "students.pdf"
   );
-
-  // 表格
-  doc.autoTable({
-
-    head: [[
-      "ID",
-      "Student ID",
-      "Name",
-      "Gender",
-      "Email",
-      "Phone",
-      "Department",
-    ]],
-
-    body: tableData,
-
-    startY: 25,
-
-  });
-
-  // 下載 PDF
-  doc.save("students-report.pdf");
 
 }
 
 // 分頁按鈕
-function renderPagination(students) {
-
-  const pageCount =
-    Math.ceil(
-      students.length / rowsPerPage
-    );
+function renderPagination() {
 
   const pagination =
     document.getElementById(
@@ -508,85 +676,64 @@ function renderPagination(students) {
 
   pagination.innerHTML = "";
 
+  const totalPages =
+    Math.ceil(
+      filteredStudents.length
+      / studentsPerPage
+    );
 
-  // Previous
-  pagination.innerHTML += `
-
-    <li class="page-item">
-
-      <button
-        class="page-link"
-        onclick="changePage(${currentPage - 1})"
-      >
-        上一頁
-      </button>
-
-    </li>
-
-  `;
-
-
-  // Page Numbers
-  for (let i = 1; i <= pageCount; i++) {
+  for (
+    let i = 1;
+    i <= totalPages;
+    i++
+  ) {
 
     pagination.innerHTML += `
 
-      <li class="page-item
-        ${currentPage === i ? "active" : ""}
-      ">
-
-        <button
-          class="page-link"
-          onclick="changePage(${i})"
-        >
-          ${i}
-        </button>
-
-      </li>
+      <button
+        class="
+          btn
+          btn-sm
+          ${
+            i === currentPage
+            ? "btn-primary"
+            : "btn-outline-primary"
+          }
+        "
+        onclick="changePage(${i})"
+      >
+        ${i}
+      </button>
 
     `;
 
   }
 
-
-  // Next
-  pagination.innerHTML += `
-
-    <li class="page-item">
-
-      <button
-        class="page-link"
-        onclick="changePage(${currentPage + 1})"
-      >
-        下一頁
-      </button>
-
-    </li>
-
-  `;
-
 }
+
 // 切換頁面
 function changePage(page) {
 
   const totalPages =
     Math.ceil(
-      allStudents.length / rowsPerPage
+      filteredStudents.length
+      / studentsPerPage
     );
 
-  if (page < 1 || page > totalPages) {
+  if (
+    page < 1 ||
+    page > totalPages
+  ) {
     return;
   }
 
   currentPage = page;
 
-  displayStudents(allStudents);
+  displayStudents();
 
 }
 
-// =========================
 // Dark Mode
-// =========================
 
 function toggleDarkMode() {
 
@@ -618,28 +765,7 @@ function toggleDarkMode() {
 }
 
 
-// =========================
-// 載入 Dark Mode 設定
-// =========================
-
-window.onload = () => {
-
-  const darkMode =
-    localStorage.getItem("darkMode");
-
-  if (darkMode === "enabled") {
-
-    document.body.classList.add(
-      "dark-mode"
-    );
-
-  }
-
-};
-
-// =========================
-// Toast Notification
-// =========================
+//彈跳式訊息欄
 
 function showToast(
   message,
@@ -673,6 +799,7 @@ function showToast(
 
 }
 
+// 登出
 function logout() {
 
   localStorage.removeItem("token");
@@ -681,6 +808,28 @@ function logout() {
 
   setTimeout(() => {
     window.location.replace("login.html");
-  }, 300);
+  }, 1000);
+
+}
+
+// 顯示指定區塊
+function showSection(sectionId) {
+
+  // 先隱藏全部
+  const sections =
+    document.querySelectorAll(
+      ".content-section"
+    );
+
+  sections.forEach((section) => {
+
+    section.style.display = "none";
+
+  });
+
+  // 顯示指定區塊
+  document.getElementById(
+    sectionId
+  ).style.display = "block";
 
 }
