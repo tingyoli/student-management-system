@@ -7,6 +7,8 @@ let allTeachers = [];
 let filteredTeachers = [];
 let allCourses = [];
 let filteredCourses = [];
+let allEnrollments = [];
+let filteredEnrollments = [];
 
 const studentsPerPage = 10;
 const teachersPerPage = 10;
@@ -190,6 +192,7 @@ window.onload = () => {
   getStudents();
   getTeachers();
   getCourses();
+  getEnrollments();
 
 };
 
@@ -961,6 +964,147 @@ function searchCourses() {
   });
 
   displayCourses();
+}
+
+// 取得選課資料
+async function getEnrollments() {
+  const response = await fetch(
+    "https://student-management-system-9whg.onrender.com/enrollments",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const enrollments = await response.json();
+
+  allEnrollments = enrollments;
+  filteredEnrollments = enrollments;
+
+  displayEnrollments();
+}
+
+// 顯示選課資料
+function displayEnrollments() {
+  const tableBody = document.getElementById("enrollmentTableBody");
+
+  tableBody.innerHTML = "";
+
+  filteredEnrollments.forEach((enrollment) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${enrollment.student_id}</td>
+        <td>${enrollment.student_name}</td>
+        <td>${enrollment.course_id}</td>
+        <td>${enrollment.course_name}</td>
+        <td>
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="deleteEnrollment(${enrollment.id}, '${enrollment.student_name}', '${enrollment.course_name}')"
+          >
+            刪除
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// 新增選課
+async function addEnrollment() {
+  const studentId = document
+    .getElementById("enrollment_student_id")
+    .value
+    .trim();
+
+  const courseId = document
+    .getElementById("enrollment_course_id")
+    .value
+    .trim();
+
+  if (!/^S\d{3}$/.test(studentId)) {
+    showToast("學號格式需為 S001", "danger");
+    return;
+  }
+
+  if (!/^C\d{3}$/.test(courseId)) {
+    showToast("課程代碼格式需為 C001", "danger");
+    return;
+  }
+
+  const response = await fetch(
+    "https://student-management-system-9whg.onrender.com/enrollments",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        student_id: studentId,
+        course_id: courseId,
+      }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    showToast(result.message, "danger");
+    return;
+  }
+
+  showToast(result.message, "success");
+
+  getEnrollments();
+}
+
+// 刪除選課
+async function deleteEnrollment(id, studentName, courseName) {
+  if (!confirm(`確定刪除 ${studentName} 的 ${courseName} 選課紀錄嗎？`)) {
+    return;
+  }
+
+  const response = await fetch(
+    `https://student-management-system-9whg.onrender.com/enrollments/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    showToast(result.message, "danger");
+    return;
+  }
+
+  showToast("選課刪除成功", "warning");
+
+  getEnrollments();
+}
+
+// 查詢選課
+function searchEnrollments() {
+  const keyword = document
+    .getElementById("enrollmentSearchInput")
+    .value
+    .toLowerCase();
+
+  filteredEnrollments = allEnrollments.filter((enrollment) => {
+    return (
+      (enrollment.student_id || "").toLowerCase().includes(keyword) ||
+      (enrollment.student_name || "").toLowerCase().includes(keyword) ||
+      (enrollment.course_id || "").toLowerCase().includes(keyword) ||
+      (enrollment.course_name || "").toLowerCase().includes(keyword)
+    );
+  });
+
+  displayEnrollments();
 }
 
 // 更新 Dashboard

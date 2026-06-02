@@ -1015,37 +1015,107 @@
       </div>
 
       <!-- 選課管理 -->
-      <div id="enrollmentSection" style="display:none">
+      <div id="enrollmentSection" class="content-section">
 
-  <h2 class="mb-3">選課管理</h2>
+  <h1 class="mb-4">選課管理</h1>
 
-  <input
-    type="text"
-    id="enrollmentSearch"
-    class="form-control mb-3"
-    placeholder="搜尋學生姓名"
-    onkeyup="searchEnrollments()"
-  >
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
 
-  <table class="table table-bordered">
-    <thead>
+    <input
+      type="text"
+      id="enrollmentSearchInput"
+      class="form-control"
+      placeholder="搜尋學生 / 課程..."
+      onkeyup="searchEnrollments()"
+      style="width: 260px;"
+    >
+
+    <button
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#addEnrollmentModal"
+    >
+      + 新增選課
+    </button>
+
+  </div>
+
+  <table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
       <tr>
         <th>學號</th>
-        <th>姓名</th>
+        <th>學生姓名</th>
         <th>課程代碼</th>
         <th>課程名稱</th>
+        <th>操作</th>
       </tr>
     </thead>
 
     <tbody id="enrollmentTableBody"></tbody>
-
   </table>
+  <!-- Add Enrollment Modal -->
+<div
+  class="modal fade"
+  id="addEnrollmentModal"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">新增選課</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="enrollment_student_id"
+          placeholder="學號，例如 S001"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="enrollment_course_id"
+          placeholder="課程代碼，例如 C001"
+        >
+
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          關閉
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="addEnrollment()"
+        >
+          新增
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
 
       </div>
 
     </div>
 
   </div>
+
+
 
 
 <!-- Toast Container -->
