@@ -33,9 +33,8 @@
 
   <div class="d-flex">
 
-    <!-- ===================== -->
-    <!-- 側面控制系統 -->
-    <!-- ===================== -->
+   
+    <!-- 側面控制系統 --> 
     <div
       class="bg-dark text-white p-3"
       style="
@@ -88,20 +87,26 @@
 
         </li>
 
+        <!-- Teacher -->
+        <li>
+          <button
+            class="btn btn-outline-light w-100 text-start"
+            onclick="showSection('teacherSection')"
+          >
+            教師管理
+          </button>
+        </li>
+
       </ul>
 
     </div>
 
 
-    <!-- ===================== -->
     <!-- Main Content -->
-    <!-- ===================== -->
     <div class="main-content p-4 flex-grow-1">
 
 
-      <!-- ===================== -->
       <!-- 數據統計 -->
-      <!-- ===================== -->
       <div
         id="dashboardSection"
         class="content-section"
@@ -221,15 +226,8 @@
 
       </div>
 
-
-      <!-- ===================== -->
-      <!-- 學生管理 -->
-      <!-- ===================== -->
-      <div
-        id="studentSection"
-        class="content-section"
-      >
-
+    <!-- 學生管理 -->     
+      <div id="studentSection"class="content-section">
         <h1 class="mb-4">
           學生管理
         </h1>
@@ -346,7 +344,7 @@
         id="addStudentModal"
         tabindex="-1">
 
-  <div class="modal-dialog">
+      <div class="modal-dialog">
 
     <div class="modal-content">
 
@@ -525,7 +523,7 @@
 
     </div>
 
-  </div>
+      </div>
 
         </div>
 
@@ -616,7 +614,152 @@
     </div>
   </div>
         </div>
+      </div>
 
+      <!-- 教師管理 -->
+      <div id="teacherSection" class="content-section">
+
+      <h1 class="mb-4">教師管理</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+    <input
+      type="text"
+      id="teacherSearchInput"
+      class="form-control"
+      placeholder="搜尋教師..."
+      onkeyup="searchTeachers()"
+      style="width: 220px;"
+    >
+
+   <button
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#addTeacherModal"
+    >
+      + 新增教師
+    </button>
+
+    </div>
+
+  <table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
+      <tr>
+        <th>教師編號</th>
+        <th>姓名</th>
+        <th>性別</th>
+        <th>Email</th>
+        <th>電話</th>
+        <th>科系</th>
+        <th>職稱</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody id="teacherTableBody"></tbody>
+    </table>
+    <!-- Add Teacher Modal -->
+<div
+  class="modal fade"
+  id="addTeacherModal"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">新增教師</h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="teacher_id"
+          placeholder="教師編號"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="teacher_name"
+          placeholder="教師姓名"
+        >
+
+        <select
+          class="form-select mb-2"
+          id="teacher_gender"
+        >
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+
+        <input
+          type="email"
+          class="form-control mb-2"
+          id="teacher_email"
+          placeholder="Email"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="teacher_phone"
+          placeholder="電話"
+        >
+
+        <select
+          class="form-select mb-2"
+          id="teacher_department"
+        >
+          <option value="資訊工程系">資訊工程系</option>
+          <option value="電機工程系">電機工程系</option>
+          <option value="企業管理系">企業管理系</option>
+          <option value="財務金融系">財務金融系</option>
+          <option value="資訊管理系">資訊管理系</option>
+          <option value="應用外語系">應用外語系</option>
+        </select>
+
+        <select
+          class="form-select"
+          id="teacher_title"
+        >
+          <option value="教授">教授</option>
+          <option value="副教授">副教授</option>
+          <option value="助理教授">助理教授</option>
+          <option value="講師">講師</option>
+        </select>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          關閉
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="addTeacher()"
+        >
+          新增
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 
       </div>
 

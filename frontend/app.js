@@ -3,8 +3,11 @@ let departmentChart;
 let currentPage = 1;
 let allStudents = [];
 let filteredStudents = [];
+let allTeachers = [];
+let filteredTeachers = [];
 
 const studentsPerPage = 10;
+const teachersPerPage = 10;
 
 
 
@@ -166,6 +169,7 @@ window.onload = () => {
 
   showSection("studentSection");
   getStudents();
+  getTeachers();
 
 };
 
@@ -290,6 +294,7 @@ async function openEditModal(id) {
   }
 }
 
+// 更新學生
 async function updateStudent() {
   const id = document.getElementById("edit_id").value;
 
@@ -394,6 +399,163 @@ function searchStudents() {
     filteredStudents
   );
 
+}
+
+
+// 取得教師資料
+async function getTeachers() {
+  const response = await fetch(
+    "https://student-management-system-9whg.onrender.com/teachers",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const teachers = await response.json();
+
+  allTeachers = teachers;
+  filteredTeachers = teachers;
+
+  displayTeachers();
+}
+
+// 顯示教師資料
+function displayTeachers() {
+  const tableBody = document.getElementById("teacherTableBody");
+
+  tableBody.innerHTML = "";
+
+  filteredTeachers.forEach((teacher) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${teacher.teacher_id}</td>
+        <td>${teacher.name}</td>
+        <td>${teacher.gender}</td>
+        <td>${teacher.email}</td>
+        <td>${teacher.phone}</td>
+        <td>${teacher.department}</td>
+        <td>${teacher.title}</td>
+        <td>
+          <button
+            class="btn btn-warning btn-sm"
+            onclick="openEditTeacherModal(${teacher.id})"
+          >
+            編輯
+          </button>
+          
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="deleteTeacher(${teacher.id})"
+          >
+            刪除
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// 刪除教師
+async function deleteTeacher(id) {
+  if (!confirm("確定要刪除這位教師嗎？")) return;
+
+  const response = await fetch(
+    `https://student-management-system-9whg.onrender.com/teachers/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  showToast(result.message, "success");
+
+  getTeachers();
+}
+
+// 新增教師
+async function addTeacher() {
+
+  const response = await fetch(
+    "http://localhost:3000/teachers",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+
+      body: JSON.stringify({
+        teacher_id:
+          document.getElementById("teacher_id").value,
+
+        name:
+          document.getElementById("teacher_name").value,
+
+        gender:
+          document.getElementById("teacher_gender").value,
+
+        email:
+          document.getElementById("teacher_email").value,
+
+        phone:
+          document.getElementById("teacher_phone").value,
+
+        department:
+          document.getElementById("teacher_department").value,
+
+        title:
+          document.getElementById("teacher_title").value
+      })
+    }
+  );
+
+  const result = await response.json();
+
+  showToast(result.message);
+
+  getTeachers();
+}
+
+// 查詢教師
+function searchTeachers() {
+
+  const keyword =
+    document
+      .getElementById(
+        "teacherSearchInput"
+      )
+      .value
+      .toLowerCase();
+
+  filteredTeachers =
+    allTeachers.filter(
+      teacher =>
+
+        teacher.name
+          .toLowerCase()
+          .includes(keyword)
+
+        ||
+
+        teacher.department
+          .toLowerCase()
+          .includes(keyword)
+
+        ||
+
+        teacher.title
+          .toLowerCase()
+          .includes(keyword)
+    );
+
+  displayTeachers();
 }
 
 // 更新 Dashboard
