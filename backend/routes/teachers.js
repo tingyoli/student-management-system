@@ -30,12 +30,11 @@ router.post("/", verifyToken, (req, res) => {
   ];
 
   db.query(sql, values, (err) => {
-    if (err.sqlMessage.includes("teacher.id")) {
-
+    if (err.sqlMessage.includes("unique_teacher_id")) {
       return res.status(400).json({ message: "教師編號已存在" });
     }
     
-    if (err.sqlMessage.includes("teacher.email")) {
+    if (err.sqlMessage.includes("unique_teacher_email")) {
       return res.status(400).json({ message: "Email 已存在" });
     }
     if (err) return res.status(400).json(
@@ -44,7 +43,6 @@ router.post("/", verifyToken, (req, res) => {
     return res.status(500).json(
       { message: "伺服器錯誤，請稍後再試" }
     );
-   res.json({ message: "Teacher added successfully" });
   });
 });
 

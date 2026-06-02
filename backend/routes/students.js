@@ -74,14 +74,17 @@ router.post("/", verifyToken, (req, res) => {
   db.query(sql, values, (err, result) => {
 
     if (err) {
+
+      console.log(err);
+      console.log(err.sqlmessage);
       if (err.code === "ER_DUP_ENTRY") {
-        if (err.sqlmessage.includes("student_id")) {
+        if (err.sqlmessage.includes("unique_student_id")) {
 
         return res.status(400).json({
           message: "學號已存在",
         });
       }
-      if (err.sqlmessage.includes("email")) {
+      if (err.sqlmessage.includes("unique_student_email")) {
         
         return res.status(400).json({
           message: "Email 已存在",

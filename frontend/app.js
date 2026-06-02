@@ -146,7 +146,7 @@ function displayStudents() {
 
             <button
               class="btn btn-danger btn-sm"
-              onclick="deleteStudent(${student.id})"
+              onclick="deleteStudent(${student.id}, '${student.name}')"
             >
               刪除
               </button>
@@ -280,9 +280,9 @@ async function addStudent() {
 }
 
 // 刪除學生
-async function deleteStudent(id) {
+async function deleteStudent(id,name) {
 
-  const confirmDelete = confirm("確定要刪除嗎？");
+  const confirmDelete = confirm(`確定要刪除 ${name} 嗎？`);
 
   if (!confirmDelete) return;
 
@@ -503,7 +503,7 @@ function displayTeachers() {
 
           <button
             class="btn btn-danger btn-sm"
-            onclick="deleteTeacher(${teacher.id})"
+            onclick="deleteTeacher(${teacher.id}, '${teacher.name}')"
           >
             刪除
           </button>
@@ -514,8 +514,8 @@ function displayTeachers() {
 }
 
 // 刪除教師
-async function deleteTeacher(id) {
-  if (!confirm("確定要刪除這位教師嗎？")) return;
+async function deleteTeacher(id,name) {
+  if (!confirm(`確定要刪除 ${name} 嗎？`)) return;
 
   const response = await fetch(
     `https://student-management-system-9whg.onrender.com/teachers/${id}`,
@@ -1018,29 +1018,31 @@ function showToast(
   message,
   type = "success"
 ) {
-
-  const toastElement =
+  const toast = 
     document.getElementById(
       "liveToast"
     );
-
+    
   const toastMessage =
     document.getElementById(
       "toastMessage"
     );
 
-  // 訊息
-  toastMessage.innerText = message;
+    toast.classList.remove("text-bg-success", "text-bg-danger", "text-bg-warning", "text-bg-info");
 
-  // 顏色
-  toastElement.className =
-    `toast align-items-center text-bg-${type} border-0`;
+    if (type === "success") {
+      toast.classList.add("text-bg-success");
+    } else if (type === "danger") {
+      toast.classList.add("text-bg-danger");
+    } else if (type === "warning") {
+      toast.classList.add("text-bg-warning");
+    } else if (type === "info") {
+      toast.classList.add("text-bg-info");
+    }
 
-  // Bootstrap Toast
-  const toast =
-    new bootstrap.Toast(
-      toastElement
-    );
+   const bootstrapToast = new bootstrap.Toast(toast);
+   bootstrapToast.show();
+  
 
   toast.show();
 
