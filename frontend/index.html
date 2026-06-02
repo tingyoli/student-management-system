@@ -900,6 +900,87 @@
   </div>
 </div>
 
+<!-- Edit Course Modal -->
+<div
+  class="modal fade"
+  id="editCourseModal"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">編輯課程</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" id="edit_course_db_id">
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="edit_course_id"
+          placeholder="課程代碼，例如 C001"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="edit_course_name"
+          placeholder="課程名稱"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="edit_course_teacher_id"
+          placeholder="教師編號，例如 T001"
+        >
+
+        <input
+          type="number"
+          class="form-control mb-2"
+          id="edit_course_credits"
+          min="1"
+          max="6"
+          placeholder="學分"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="edit_course_classroom"
+          placeholder="教室"
+        >
+
+      </div>
+
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          關閉
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="updateCourse()"
+        >
+          儲存修改
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 </div>
 
       

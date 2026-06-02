@@ -739,6 +739,14 @@ function displayCourses() {
         <td>${course.credits}</td>
         <td>${course.classroom}</td>
         <td>
+            <button
+            class="btn btn-warning btn-sm me-1"
+            onclick="editCourseModal(${course.id})"
+          >
+            編輯
+          </button>
+
+
           <button
             class="btn btn-danger btn-sm"
             onclick="deleteCourse(${course.id}, '${course.course_name}')"
@@ -749,6 +757,99 @@ function displayCourses() {
       </tr>
     `;
   });
+}
+
+// 編輯課程
+function editCourse(id) {
+  const course = allCourses.find((c) => c.id === id);
+
+  if (!course) {
+    showToast("找不到課程資料", "danger");
+    return;
+  }
+
+  document.getElementById("edit_course_db_id").value = course.id;
+  document.getElementById("edit_course_id").value = course.course_id;
+  document.getElementById("edit_course_name").value = course.course_name;
+  document.getElementById("edit_course_teacher_id").value = course.teacher_id;
+  document.getElementById("edit_course_credits").value = course.credits;
+  document.getElementById("edit_course_classroom").value = course.classroom;
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("editCourseModal")
+  );
+
+  modal.show();
+}
+
+// 更新課程
+async function updateCourse() {
+  const id = document.getElementById("edit_course_db_id").value;
+  const courseId = document.getElementById("edit_course_id").value.trim();
+  const courseName = document.getElementById("edit_course_name").value.trim();
+  const teacherId = document.getElementById("edit_course_teacher_id").value.trim();
+  const credits = document.getElementById("edit_course_credits").value;
+  const classroom = document.getElementById("edit_course_classroom").value.trim();
+
+  if (!/^C\d{3}$/.test(courseId)) {
+    showToast("課程代碼格式需為 C001", "danger");
+    return;
+  }
+
+  if (courseName === "") {
+    showToast("課程名稱不可空白", "danger");
+    return;
+  }
+
+  if (!/^T\d{3}$/.test(teacherId)) {
+    showToast("教師編號格式需為 T001", "danger");
+    return;
+  }
+
+  if (credits < 1 || credits > 6) {
+    showToast("學分需介於 1 到 6", "danger");
+    return;
+  }
+
+  if (classroom === "") {
+    showToast("教室不可空白", "danger");
+    return;
+  }
+
+  const response = await fetch(
+    `https://student-management-system-9whg.onrender.com/courses/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        course_id: courseId,
+        course_name: courseName,
+        teacher_id: teacherId,
+        credits: credits,
+        classroom: classroom,
+      }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    showToast(result.message, "danger");
+    return;
+  }
+
+  showToast(result.message, "info");
+
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("editCourseModal")
+  );
+
+  modal.hide();
+
+  getCourses();
 }
 
 // 新增課程
