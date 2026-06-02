@@ -6,6 +6,7 @@ const cors = require("cors");
 const studentRoutes = require("./routes/students");
 const authRoutes = require("./routes/auth");
 const teacherRoutes = require("./routes/teachers");
+const courseRoutes = require("./routes/courses");
 
 
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/students", studentRoutes);
 app.use("/auth", authRoutes);
 app.use("/teachers", teacherRoutes);
+app.use("/courses", courseRoutes);
 
 app.get("/", (req, res) => {
   res.send("Student Management API Running");

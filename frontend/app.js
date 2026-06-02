@@ -304,8 +304,14 @@ async function deleteStudent(id,name) {
     );
 
     const result = await response.json();
+    if (!response.ok) {
+  showToast(result.message, "danger");
+  return;
+}
 
-    showToast(result.message, "success");
+showToast("學生刪除成功", "warning");
+
+    
 
     // 重新載入資料
     getStudents();
@@ -382,8 +388,14 @@ async function updateStudent() {
     );
 
     const result = await response.json();
+    if (!response.ok) {
+  showToast(result.message, "danger");
+  return;
+}
 
-    showToast(result.message, "success");
+showToast("學生資料更新成功", "info");
+
+   
 
     const modalElement =
       document.getElementById("editStudentModal");
@@ -534,13 +546,49 @@ async function deleteTeacher(id,name) {
 
   const result = await response.json();
 
-  showToast(result.message, "success");
+  if (!response.ok) {
+  showToast(result.message, "danger");
+  return;
+}
+
+showToast("教師刪除成功", "warning");
 
   getTeachers();
 }
 
 // 新增教師
 async function addTeacher() {
+  if (!validateTeacherId(teacherId)) {
+  showToast(
+    "教師編號格式需為 T001",
+    "danger"
+  );
+  return;
+}
+
+if (/\d/.test(name)) {
+  showToast(
+    "教師姓名不可包含數字",
+    "danger"
+  );
+  return;
+}
+
+if (!validateEmail(email)) {
+  showToast(
+    "Email格式錯誤",
+    "danger"
+  );
+  return;
+}
+
+if (!validateTaiwanPhone(phone)) {
+  showToast(
+    "手機格式錯誤",
+    "danger"
+  );
+  return;
+}
   const teacherId = document.getElementById("teacher_id").value.trim();
   const name = document.getElementById("teacher_name").value.trim();
   const email = document.getElementById("teacher_email").value.trim();
@@ -572,7 +620,7 @@ async function addTeacher() {
   }
 
   const response = await fetch(
-    "http://localhost:3000/teachers",
+    "https://student-management-system-9whg.onrender.com/teachers",
     {
       method: "POST",
 
@@ -612,7 +660,7 @@ async function addTeacher() {
       return;
     }
 
-  showToast(result.message);
+  showToast(result.message, "success");
 
   getTeachers();
 }
