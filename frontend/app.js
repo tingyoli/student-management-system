@@ -1,5 +1,3 @@
-const { get } = require("../backend/routes/students");
-
 let genderChart;
 let departmentChart;
 let currentPage = 1;

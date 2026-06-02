@@ -65,6 +65,47 @@ router.post("/", verifyToken, (req, res) => {
   });
 });
 
+// 更新課程
+router.put("/:id", verifyToken, (req, res) => {
+  const sql = `
+    UPDATE courses
+    SET
+      course_id = ?,
+      course_name = ?,
+      teacher_id = ?,
+      credits = ?,
+      classroom = ?
+    WHERE id = ?
+  `;
+
+  const values = [
+    req.body.course_id,
+    req.body.course_name,
+    req.body.teacher_id,
+    req.body.credits,
+    req.body.classroom,
+    req.params.id,
+  ];
+
+  db.query(sql, values, (err) => {
+    if (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        return res.status(400).json({
+          message: "課程代碼已存在",
+        });
+      }
+
+      return res.status(500).json({
+        message: err.message,
+      });
+    }
+
+    res.json({
+      message: "課程更新成功",
+    });
+  });
+});
+
 // 刪除課程
 router.delete("/:id", verifyToken, (req, res) => {
   const sql = "DELETE FROM courses WHERE id = ?";
