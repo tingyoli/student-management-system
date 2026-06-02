@@ -74,12 +74,27 @@ router.post("/", verifyToken, (req, res) => {
   db.query(sql, values, (err, result) => {
 
     if (err) {
-      res.status(500).json(err);
-      return;
-    }
+      if (err.code === "ER_DUP_ENTRY") {
+        if (err.sqlmessage.includes("student_id")) {
 
-    res.json({
-      message: "Student added successfully",
+        return res.status(400).json({
+          message: "學號已存在",
+        });
+      }
+      if (err.sqlmessage.includes("email")) {
+        
+        return res.status(400).json({
+          message: "Email 已存在",
+        });
+      }
+
+      }
+      return res.status(400).json({
+        message: "資料重複",
+      });     
+    }
+    return res.status(500).json({
+      message: err.message
     });
 
   });

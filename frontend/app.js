@@ -8,6 +8,21 @@ let filteredTeachers = [];
 
 const studentsPerPage = 10;
 const teachersPerPage = 10;
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validateTaiwanPhone(phone) {
+  return /^09\d{8}$/.test(phone);
+}
+
+function validateStudentId(studentId) {
+  return /^S\d{3}$/.test(studentId);
+}
+
+function validateTeacherId(teacherId) {
+  return /^T\d{3}$/.test(teacherId);
+}
 
 
 
@@ -191,6 +206,45 @@ async function addStudent() {
     department: document.getElementById("department").value,
 
   };
+  const studentId = document.getElementById("student_id").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const department = document.getElementById("department").value;
+
+  if (!validateStudentId(studentId)) {
+    showToast("學號格式錯誤，請輸入 S001 格式");
+    return;
+  }
+
+  if (name === "") {
+    showToast("姓名不可空白");
+    return;
+  }
+
+  if (/\d/.test(name)) {
+    showToast("姓名不可包含數字");
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    showToast("Email 格式錯誤，例如 test@gmail.com");
+    return;
+  }
+
+  if (!validateTaiwanPhone(phone)) {
+    showToast("電話格式錯誤，請輸入 09 開頭共 10 碼");
+    return;
+  }
+
+  if (department === "") {
+    showToast("請選擇科系");
+    return;
+  }
+
+
+
+  
 
   try {
 
@@ -413,6 +467,8 @@ async function getTeachers() {
     }
   );
 
+
+
   const teachers = await response.json();
 
   allTeachers = teachers;
@@ -444,7 +500,7 @@ function displayTeachers() {
           >
             編輯
           </button>
-          
+
           <button
             class="btn btn-danger btn-sm"
             onclick="deleteTeacher(${teacher.id})"
@@ -480,6 +536,35 @@ async function deleteTeacher(id) {
 
 // 新增教師
 async function addTeacher() {
+  const teacherId = document.getElementById("teacher_id").value.trim();
+  const name = document.getElementById("teacher_name").value.trim();
+  const email = document.getElementById("teacher_email").value.trim();
+  const phone = document.getElementById("teacher_phone").value.trim();
+
+  if (!validateTeacherId(teacherId)) {
+    showToast("教師編號格式錯誤，請輸入 T001 格式");
+    return;
+  }
+
+  if (name === "") {
+    showToast("教師姓名不可空白");
+    return;
+  }
+
+  if (/\d/.test(name)) {
+    showToast("教師姓名不可包含數字");
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    showToast("Email 格式錯誤，例如 teacher@gmail.com");
+    return;
+  }
+
+  if (!validateTaiwanPhone(phone)) {
+    showToast("電話格式錯誤，請輸入 09 開頭共 10 碼");
+    return;
+  }
 
   const response = await fetch(
     "http://localhost:3000/teachers",
