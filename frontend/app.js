@@ -1,3 +1,5 @@
+const { get } = require("../backend/routes/students");
+
 let genderChart;
 let departmentChart;
 let currentPage = 1;
@@ -5,6 +7,8 @@ let allStudents = [];
 let filteredStudents = [];
 let allTeachers = [];
 let filteredTeachers = [];
+let allCourses = [];
+let filteredCourses = [];
 
 const studentsPerPage = 10;
 const teachersPerPage = 10;
@@ -185,6 +189,7 @@ window.onload = () => {
   showSection("studentSection");
   getStudents();
   getTeachers();
+  getCourses();
 
 };
 
@@ -698,6 +703,164 @@ function searchTeachers() {
     );
 
   displayTeachers();
+}
+
+// 取得課程資料
+async function getCourses() {
+  const response = await fetch(
+    "https://student-management-system-9whg.onrender.com/courses",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const courses = await response.json();
+
+  allCourses = courses;
+  filteredCourses = courses;
+
+  displayCourses();
+}
+
+// 顯示課程資料
+function displayCourses() {
+  const tableBody = document.getElementById("courseTableBody");
+
+  tableBody.innerHTML = "";
+
+  filteredCourses.forEach((course) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td>${course.course_id}</td>
+        <td>${course.course_name}</td>
+        <td>${course.teacher_id}</td>
+        <td>${course.teacher_name || "未指定"}</td>
+        <td>${course.credits}</td>
+        <td>${course.classroom}</td>
+        <td>
+          <button
+            class="btn btn-danger btn-sm"
+            onclick="deleteCourse(${course.id}, '${course.course_name}')"
+          >
+            刪除
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// 新增課程
+async function addCourse() {
+  const courseId = document.getElementById("course_id").value.trim();
+  const courseName = document.getElementById("course_name").value.trim();
+  const teacherId = document.getElementById("course_teacher_id").value.trim();
+  const credits = document.getElementById("course_credits").value;
+  const classroom = document.getElementById("course_classroom").value.trim();
+
+  if (!/^C\d{3}$/.test(courseId)) {
+    showToast("課程代碼格式需為 C001", "danger");
+    return;
+  }
+
+  if (courseName === "") {
+    showToast("課程名稱不可空白", "danger");
+    return;
+  }
+
+  if (!/^T\d{3}$/.test(teacherId)) {
+    showToast("教師編號格式需為 T001", "danger");
+    return;
+  }
+
+  if (credits < 1 || credits > 6) {
+    showToast("學分需介於 1 到 6", "danger");
+    return;
+  }
+
+  if (classroom === "") {
+    showToast("教室不可空白", "danger");
+    return;
+  }
+
+  const response = await fetch(
+    "https://student-management-system-9whg.onrender.com/courses",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        course_id: courseId,
+        course_name: courseName,
+        teacher_id: teacherId,
+        credits: credits,
+        classroom: classroom,
+      }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    showToast(result.message, "danger");
+    return;
+  }
+
+  showToast(result.message, "success");
+
+  getCourses();
+}
+
+// 刪除課程
+async function deleteCourse(id, courseName) {
+  if (!confirm(`確定刪除課程 ${courseName} 嗎？`)) {
+    return;
+  }
+
+  const response = await fetch(
+    `https://student-management-system-9whg.onrender.com/courses/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    showToast(result.message, "danger");
+    return;
+  }
+
+  showToast("課程刪除成功", "warning");
+
+  getCourses();
+}
+
+// 查詢課程
+function searchCourses() {
+  const keyword = document
+    .getElementById("courseSearchInput")
+    .value
+    .toLowerCase();
+
+  filteredCourses = allCourses.filter((course) => {
+    return (
+      (course.course_id || "").toLowerCase().includes(keyword) ||
+      (course.course_name || "").toLowerCase().includes(keyword) ||
+      (course.teacher_id || "").toLowerCase().includes(keyword) ||
+      (course.teacher_name || "").toLowerCase().includes(keyword) ||
+      (course.classroom || "").toLowerCase().includes(keyword)
+    );
+  });
+
+  displayCourses();
 }
 
 // 更新 Dashboard

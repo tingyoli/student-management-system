@@ -776,6 +776,132 @@
 
       </div>
 
+      <!-- 課程管理 -->
+<div id="courseSection" class="content-section">
+
+  <h1 class="mb-4">課程管理</h1>
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+    <input
+      type="text"
+      id="courseSearchInput"
+      class="form-control"
+      placeholder="搜尋課程..."
+      onkeyup="searchCourses()"
+      style="width: 220px;"
+    >
+
+    <button
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#addCourseModal"
+    >
+      + 新增課程
+    </button>
+
+  </div>
+
+  <table class="table table-bordered table-hover shadow">
+    <thead class="table-dark">
+      <tr>
+        <th>課程代碼</th>
+        <th>課程名稱</th>
+        <th>教師編號</th>
+        <th>授課教師</th>
+        <th>學分</th>
+        <th>教室</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody id="courseTableBody"></tbody>
+  </table>
+
+  <!-- Add Course Modal -->
+<div
+  class="modal fade"
+  id="addCourseModal"
+  tabindex="-1"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">新增課程</h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="course_id"
+          placeholder="課程代碼，例如 C001"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="course_name"
+          placeholder="課程名稱"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="course_teacher_id"
+          placeholder="教師編號，例如 T001"
+        >
+
+        <input
+          type="number"
+          class="form-control mb-2"
+          id="course_credits"
+          placeholder="學分，例如 3"
+          min="1"
+          max="6"
+        >
+
+        <input
+          type="text"
+          class="form-control mb-2"
+          id="course_classroom"
+          placeholder="教室，例如 A101"
+        >
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          關閉
+        </button>
+
+        <button
+          class="btn btn-primary"
+          onclick="addCourse()"
+        >
+          新增
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
       
 
     </div>

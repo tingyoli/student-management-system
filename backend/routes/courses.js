@@ -1,14 +1,19 @@
-const verifyToken = require("../middleware/verifyToken");
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/verifyToken");
 
-// 取得全部課程
+// 取得所有課程
 router.get("/", verifyToken, (req, res) => {
   const sql = `
     SELECT 
-      courses.*,
-      teachers.name AS teacher_name
+      courses.id,
+      courses.course_id,
+      courses.course_name,
+      courses.teacher_id,
+      teachers.name AS teacher_name,
+      courses.credits,
+      courses.classroom
     FROM courses
     LEFT JOIN teachers
     ON courses.teacher_id = teachers.teacher_id
@@ -62,21 +67,19 @@ router.post("/", verifyToken, (req, res) => {
 
 // 刪除課程
 router.delete("/:id", verifyToken, (req, res) => {
-  db.query(
-    "DELETE FROM courses WHERE id = ?",
-    [req.params.id],
-    (err) => {
-      if (err) {
-        return res.status(500).json({
-          message: err.message,
-        });
-      }
+  const sql = "DELETE FROM courses WHERE id = ?";
 
-      res.json({
-        message: "課程刪除成功",
+  db.query(sql, [req.params.id], (err) => {
+    if (err) {
+      return res.status(500).json({
+        message: err.message,
       });
     }
-  );
+
+    res.json({
+      message: "課程刪除成功",
+    });
+  });
 });
 
 module.exports = router;
