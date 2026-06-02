@@ -12,6 +12,8 @@ let filteredCourses = [];
 
 const studentsPerPage = 10;
 const teachersPerPage = 10;
+const coursesPerPage = 10;
+
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -476,7 +478,6 @@ function searchStudents() {
   );
 
 }
-
 
 // 取得教師資料
 async function getTeachers() {
