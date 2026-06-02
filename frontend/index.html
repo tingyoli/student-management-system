@@ -105,7 +105,17 @@
   >
     課程管理
   </button>
-</li>
+        </li>
+
+        <!-- Enrollment -->
+        <li>
+  <button
+    class="btn btn-outline-light w-100 text-start"
+    onclick="showSection('enrollmentSection')"
+  >
+    選課管理
+  </button>
+        </li>
 
       </ul>
 
@@ -231,8 +241,29 @@
             </div>
 
           </div>
+          <!-- Teacher Count -->
+        <div class="col-md-4 mt-3">
+  <div class="card shadow">
+    <div class="card-body">
+      <h5>教師總數</h5>
+      <h2 id="totalTeachers">0</h2>
+    </div>
+  </div>
+        </div>
+
+        <!-- Course Count -->
+        <div class="col-md-4 mt-3">
+  <div class="card shadow">
+    <div class="card-body">
+      <h5>課程總數</h5>
+      <h2 id="totalCourses">0</h2>
+    </div>
+  </div>
+        </div>
 
         </div>
+
+        
 
       </div>
 
@@ -777,7 +808,7 @@
       </div>
 
       <!-- 課程管理 -->
-<div id="courseSection" class="content-section">
+      <div id="courseSection" class="content-section">
 
   <h1 class="mb-4">課程管理</h1>
 
@@ -981,9 +1012,36 @@
   </div>
 </div>
 
-</div>
+      </div>
 
-      
+      <!-- 選課管理 -->
+      <div id="enrollmentSection" style="display:none">
+
+  <h2 class="mb-3">選課管理</h2>
+
+  <input
+    type="text"
+    id="enrollmentSearch"
+    class="form-control mb-3"
+    placeholder="搜尋學生姓名"
+    onkeyup="searchEnrollments()"
+  >
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>學號</th>
+        <th>姓名</th>
+        <th>課程代碼</th>
+        <th>課程名稱</th>
+      </tr>
+    </thead>
+
+    <tbody id="enrollmentTableBody"></tbody>
+
+  </table>
+
+      </div>
 
     </div>
 

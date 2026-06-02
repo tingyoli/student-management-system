@@ -186,7 +186,7 @@ window.onload = () => {
 
   }
 
-  showSection("studentSection");
+  showSection("dashboardSection");
   getStudents();
   getTeachers();
   getCourses();
@@ -741,7 +741,7 @@ function displayCourses() {
         <td>
             <button
             class="btn btn-warning btn-sm me-1"
-            onclick="editCourseModal(${course.id})"
+            onclick="editCourse(${course.id})"
           >
             編輯
           </button>
@@ -972,6 +972,10 @@ function updateDashboard(students) {
 
   document.getElementById("totalStudents")
     .innerText = students.length;
+  document.getElementById("totalTeachers")
+  .textContent = allTeachers.length;
+  document.getElementById("totalCourses")
+  .textContent = allCourses.length;
 
   const maleCount = students.filter(
     s => s.gender === "男"
@@ -986,6 +990,7 @@ function updateDashboard(students) {
 
   document.getElementById("femaleStudents")
     .innerText = femaleCount;
+  
 
 
   // ========================
