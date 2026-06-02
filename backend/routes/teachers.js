@@ -30,19 +30,22 @@ router.post("/", verifyToken, (req, res) => {
   ];
 
   db.query(sql, values, (err) => {
-    if (err.sqlMessage.includes("unique_teacher_id")) {
+    if(err.code === "ER_DUP_ENTRY") {
+
+      if (err.sqlMessage.includes("unique_teacher_id")) {
       return res.status(400).json({ message: "教師編號已存在" });
     }
-    
-    if (err.sqlMessage.includes("unique_teacher_email")) {
+      if (err.sqlMessage.includes("unique_teacher_email")) {
       return res.status(400).json({ message: "Email 已存在" });
     }
     if (err) return res.status(400).json(
-      { message: "新增教師失敗，請檢查輸入資料是否正確" }
-    );
-    return res.status(500).json(
+      { 
+        message: "新增教師失敗，請檢查輸入資料是否正確" 
+      });
+      return res.status(500).json(
       { message: "伺服器錯誤，請稍後再試" }
     );
+    }
   });
 });
 

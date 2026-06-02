@@ -263,6 +263,11 @@ async function addStudent() {
 
     const result = await response.json();
 
+    if (!response.ok) {
+      showToast(result.message, "danger");
+      return;
+    }
+
     showToast(result.message, "success");
 
     // 重新載入資料
@@ -271,7 +276,7 @@ async function addStudent() {
     // 清空表單
     document.getElementById("studentForm").reset();
 
-  } catch (error) {
+  }catch (error) {
 
     console.log(error);
 
@@ -602,6 +607,10 @@ async function addTeacher() {
   );
 
   const result = await response.json();
+  if (!response.ok) {
+      showToast(result.message, "danger");
+      return;
+    }
 
   showToast(result.message);
 
@@ -1040,11 +1049,10 @@ function showToast(
       toast.classList.add("text-bg-info");
     }
 
+  toastMessage.innerText = message;
+
    const bootstrapToast = new bootstrap.Toast(toast);
    bootstrapToast.show();
-  
-
-  toast.show();
 
 }
 

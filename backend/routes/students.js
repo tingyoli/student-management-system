@@ -74,31 +74,34 @@ router.post("/", verifyToken, (req, res) => {
   db.query(sql, values, (err, result) => {
 
     if (err) {
+  if (err.code === "ER_DUP_ENTRY") {
+    const errorMessage = err.message || err.sqlMessage || "";
 
-      console.log(err);
-      console.log(err.sqlmessage);
-      if (err.code === "ER_DUP_ENTRY") {
-        if (err.sqlmessage.includes("unique_student_id")) {
-
-        return res.status(400).json({
-          message: "學號已存在",
-        });
-      }
-      if (err.sqlmessage.includes("unique_student_email")) {
-        
-        return res.status(400).json({
-          message: "Email 已存在",
-        });
-      }
-
-      }
+    if (
+      errorMessage.includes("unique_student_id")
+    ) {
       return res.status(400).json({
-        message: "資料重複",
-      });     
+        message: "學號已存在",
+      });
     }
-    return res.status(500).json({
-      message: err.message
+
+    if (
+      errorMessage.includes("unique_student_email")
+    ) {
+      return res.status(400).json({
+        message: "Email 已存在",
+      });
+    }
+
+    return res.status(400).json({
+      message: "資料重複",
     });
+  }
+
+  return res.status(500).json({
+    message: err.message,
+  });
+}
 
   });
 
