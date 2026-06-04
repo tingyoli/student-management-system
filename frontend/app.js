@@ -171,8 +171,9 @@ function displayStudents() {
 
 
 // 初始化
-window.onload = () => {
-
+window.onload = async function () 
+{
+  
   const darkMode =
     localStorage.getItem(
       "darkMode"
@@ -189,10 +190,14 @@ window.onload = () => {
   }
 
   showSection("dashboardSection");
-  getStudents();
-  getTeachers();
-  getCourses();
-  getEnrollments();
+  await getStudents();
+  await getTeachers();
+  await getCourses();
+  await getEnrollments();
+
+  updateDashboard(
+    filteredStudents
+  );
 
 };
 
