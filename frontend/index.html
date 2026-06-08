@@ -287,21 +287,82 @@
             gap-3
           "
         >
+        
            
 
           <!-- Search -->
-          <input
-            type="text"
-            id="searchInput"
-            class="form-control"
-            placeholder="搜尋學生..."
-            onkeyup="searchStudents()"
-            style="width: 220px;"
-          >
-          
+          <div class="row g-2 mb-3">
 
+  <div class="col-md-2">
+    <input
+      type="text"
+      id="filterStudentId"
+      class="form-control"
+      placeholder="學號"
+      onkeyup="advancedSearchStudents()"
+    >
+  </div>
 
-          <div class="d-flex gap-2 flex-wrap">
+  <div class="col-md-2">
+    <input
+      type="text"
+      id="filterStudentName"
+      class="form-control"
+      placeholder="姓名"
+      onkeyup="advancedSearchStudents()"
+    >
+  </div>
+
+  <div class="col-md-2">
+    <select
+      id="filterStudentGender"
+      class="form-select"
+      onchange="advancedSearchStudents()"
+    >
+      <option value="">全部性別</option>
+      <option value="男">男</option>
+      <option value="女">女</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <select
+      id="filterStudentDepartment"
+      class="form-select"
+      onchange="advancedSearchStudents()"
+    >
+      <option value="">全部科系</option>
+      <option value="資訊工程系">資訊工程系</option>
+      <option value="資訊管理系">資訊管理系</option>
+      <option value="電機工程系">電機工程系</option>
+      <option value="企業管理系">企業管理系</option>
+      <option value="財務金融系">財務金融系</option>
+      <option value="機械工程系">機械工程系</option>
+      <option value="應用外語系">應用外語系</option>
+    </select>
+  </div>
+
+  <div class="col-md-2">
+    <input
+      type="text"
+      id="filterStudentEmail"
+      class="form-control"
+      placeholder="Email"
+      onkeyup="advancedSearchStudents()"
+    >
+  </div>
+
+  <div class="col-md-2">
+    <input
+      type="text"
+      id="filterStudentPhone"
+      class="form-control"
+      placeholder="電話"
+      onkeyup="advancedSearchStudents()"
+    >
+  </div>
+
+          </div>
 
             <!-- Dark Mode -->
             <button
@@ -338,9 +399,7 @@
 
           </div>
 
-        </div>
-
-
+        
         <!-- Student Table -->
         <table class="table table-bordered table-hover shadow">
 
@@ -659,7 +718,8 @@
     </div>
   </div>
         </div>
-      </div>
+        </div>
+      
 
       <!-- 教師管理 -->
       <div id="teacherSection" class="content-section">

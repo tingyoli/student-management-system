@@ -426,63 +426,87 @@ showToast("學生資料更新成功", "info");
   }
 }
 // 查詢學生
-function searchStudents() {
+function advancedSearchStudents() {
+  const studentId = document
+    .getElementById("filterStudentId")
+    .value
+    .toLowerCase()
+    .trim();
 
-  const keyword =
-    document
-      .getElementById(
-        "searchInput"
-      )
-      .value
-      .toLowerCase();
+  const name = document
+    .getElementById("filterStudentName")
+    .value
+    .toLowerCase()
+    .trim();
 
-  filteredStudents =
-    allStudents.filter(
-      (student) => {
+  const gender = document
+    .getElementById("filterStudentGender")
+    .value;
 
-        return (
+  const department = document
+    .getElementById("filterStudentDepartment")
+    .value;
 
-          (student.name || "")
-            .toLowerCase()
-            .includes(keyword)
+  const email = document
+    .getElementById("filterStudentEmail")
+    .value
+    .toLowerCase()
+    .trim();
 
-          ||
+  const phone = document
+    .getElementById("filterStudentPhone")
+    .value
+    .toLowerCase()
+    .trim();
 
-          (student.department || "")
-            .toLowerCase()
-            .includes(keyword)
+  filteredStudents = allStudents.filter((student) => {
+    const matchStudentId =
+      studentId === "" ||
+      (student.student_id || "")
+        .toLowerCase()
+        .includes(studentId);
 
-          ||
+    const matchName =
+      name === "" ||
+      (student.name || "")
+        .toLowerCase()
+        .includes(name);
 
-          (student.gender || "")
-            .toLowerCase()
-            .includes(keyword)
+    const matchGender =
+      gender === "" ||
+      student.gender === gender;
 
-          ||
+    const matchDepartment =
+      department === "" ||
+      student.department === department;
 
-          (student.email || "")
-            .toLowerCase()
-            .includes(keyword)
+    const matchEmail =
+      email === "" ||
+      (student.email || "")
+        .toLowerCase()
+        .includes(email);
 
-          ||
+    const matchPhone =
+      phone === "" ||
+      (student.phone || "")
+        .toLowerCase()
+        .includes(phone);
 
-          (student.phone || "")
-            .toLowerCase()
-            .includes(keyword)
-
-        );
-
-      }
+    return (
+      matchStudentId &&
+      matchName &&
+      matchGender &&
+      matchDepartment &&
+      matchEmail &&
+      matchPhone
     );
+  });
 
   currentPage = 1;
 
   displayStudents();
 
-  updateDashboard(
-    filteredStudents
-  );
-
+  updateDashboard(filteredStudents);
 }
 
 // 取得教師資料
