@@ -1245,109 +1245,63 @@ function updateDashboard(students) {
 }
 
 // 匯出 Excel
-function exportExcel() {
-
-  // 取得表格資料
-  const rows =
-    document.querySelectorAll(
-      "table tbody tr"
-    );
+function exportExcel(tableBodyId, headers, filename, sheetName) {
+  const rows = document.querySelectorAll(`#${tableBodyId} tr`);
 
   let data = [];
 
-  // 標題列
-  data.push([
-    "ID",
-    "姓名",
-    "年齡",
-    "性別",
-    "科系"
-  ]);
+  data.push(headers);
 
-  // 資料列
   rows.forEach((row) => {
-
-    const cols =
-      row.querySelectorAll("td");
+    const cols = row.querySelectorAll("td");
 
     if (cols.length > 0) {
+      let rowData = [];
 
-      data.push([
+      for (let i = 0; i < headers.length; i++) {
+        rowData.push(cols[i].innerText);
+      }
 
-        cols[0].innerText,
-        cols[1].innerText,
-        cols[2].innerText,
-        cols[3].innerText,
-        cols[4].innerText
-
-      ]);
-
+      data.push(rowData);
     }
-
   });
 
-  // 建立 worksheet
-  const worksheet =
-    XLSX.utils.aoa_to_sheet(data);
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
 
-    worksheet["!cols"] = [
+  worksheet["!cols"] = headers.map(() => {
+    return { wch: 20 };
+  });
 
-  { wch: 10 },
-  { wch: 20 },
-  { wch: 10 },
-  { wch: 10 },
-  { wch: 25 }
-
-];
-
-  // 建立 workbook
-  const workbook =
-    XLSX.utils.book_new();
+  const workbook = XLSX.utils.book_new();
 
   XLSX.utils.book_append_sheet(
     workbook,
     worksheet,
-    "Students"
+    sheetName
   );
 
-  // 匯出
-  XLSX.writeFile(
-    workbook,
-    "students.xlsx"
-  );
-
+  XLSX.writeFile(workbook, filename);
 }
 
 // 匯出 PDF
-async function exportPDF() {
+async function exportPDF(tableSelector, filename) {
+  const element = document.querySelector(tableSelector);
 
-  const element =
-    document.querySelector("table");
+  const canvas = await html2canvas(element);
 
-  const canvas =
-    await html2canvas(element);
+  const imgData = canvas.toDataURL("image/png");
 
-  const imgData =
-    canvas.toDataURL("image/png");
+  const { jsPDF } = window.jspdf;
 
-  const { jsPDF } =
-    window.jspdf;
-
-  const pdf =
-    new jsPDF();
+  const pdf = new jsPDF();
 
   const imgWidth = 190;
-
   const pageHeight = 295;
 
   const imgHeight =
-    canvas.height *
-    imgWidth /
-    canvas.width;
+    (canvas.height * imgWidth) / canvas.width;
 
-  let heightLeft =
-    imgHeight;
-
+  let heightLeft = imgHeight;
   let position = 10;
 
   pdf.addImage(
@@ -1362,9 +1316,7 @@ async function exportPDF() {
   heightLeft -= pageHeight;
 
   while (heightLeft >= 0) {
-
-    position =
-      heightLeft - imgHeight;
+    position = heightLeft - imgHeight;
 
     pdf.addPage();
 
@@ -1378,15 +1330,71 @@ async function exportPDF() {
     );
 
     heightLeft -= pageHeight;
-
   }
 
-  pdf.save(
-    "students.pdf"
-  );
-
+  pdf.save(filename);
 }
 
+function exportStudentsExcel() {
+  exportExcel(
+    "studentTableBody",
+    ["學號", "姓名", "性別", "Email", "電話", "科系"],
+    "students.xlsx",
+    "Students"
+  );
+}
+
+function exportStudentsPDF() {
+  exportPDF(
+    "#studentSection table",
+    "students.pdf"
+  );
+}
+function exportTeachersExcel() {
+  exportExcel(
+    "teacherTableBody",
+    ["教師編號", "姓名", "性別", "Email", "電話", "科系", "職稱"],
+    "teachers.xlsx",
+    "Teachers"
+  );
+}
+
+function exportTeachersPDF() {
+  exportPDF(
+    "#teacherSection table",
+    "teachers.pdf"
+  );
+}
+function exportCoursesExcel() {
+  exportExcel(
+    "courseTableBody",
+    ["課程代碼", "課程名稱", "教師編號", "授課教師", "學分", "教室"],
+    "courses.xlsx",
+    "Courses"
+  );
+}
+
+function exportCoursesPDF() {
+  exportPDF(
+    "#courseSection table",
+    "courses.pdf"
+  );
+}
+function exportEnrollmentsExcel() {
+  exportExcel(
+    "enrollmentTableBody",
+    ["學號", "學生姓名", "課程代碼", "課程名稱"],
+    "enrollments.xlsx",
+    "Enrollments"
+  );
+}
+
+function exportEnrollmentsPDF() {
+  exportPDF(
+    "#enrollmentSection table",
+    "enrollments.pdf"
+  );
+}
 // 分頁按鈕
 function renderPagination() {
 

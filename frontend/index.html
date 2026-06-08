@@ -314,7 +314,7 @@
             <!-- Export Excel -->
             <button
               class="btn btn-success"
-              onclick="exportExcel()"
+              onclick="exportStudentsExcel()"
             >
               匯出 Excel
             </button>
@@ -322,7 +322,7 @@
             <!-- Export PDF -->
             <button
               class="btn btn-danger"
-              onclick="exportPDF()"
+              onclick="exportStudentsPDF()"
             >
               匯出 PDF
             </button>
@@ -676,6 +676,21 @@
       onkeyup="searchTeachers()"
       style="width: 220px;"
     >
+    <!-- Export Excel -->
+            <button
+              class="btn btn-success"
+              onclick="exportTeachersExcel()"
+            >
+              匯出 Excel
+            </button>
+
+            <!-- Export PDF -->
+            <button
+              class="btn btn-danger"
+              onclick="exportTeachersPDF()"
+            >
+              匯出 PDF
+            </button>
 
    <button
       class="btn btn-primary"
@@ -806,21 +821,7 @@
     </div>
   </div>
 </div>
-<!-- Export Excel -->
-            <button
-              class="btn btn-success"
-              onclick="exportExcel()"
-            >
-              匯出 Excel
-            </button>
 
-            <!-- Export PDF -->
-            <button
-              class="btn btn-danger"
-              onclick="exportPDF()"
-            >
-              匯出 PDF
-            </button>
 
       </div>
 
@@ -842,7 +843,7 @@
     <!-- Export Excel -->
             <button
               class="btn btn-success"
-              onclick="exportExcel()"
+              onclick="exportCoursesExcel()"
             >
               匯出 Excel
             </button>
@@ -850,7 +851,7 @@
             <!-- Export PDF -->
             <button
               class="btn btn-danger"
-              onclick="exportPDF()"
+              onclick="exportCoursesPDF()"
             >
               匯出 PDF
             </button>
@@ -1061,6 +1062,21 @@
       onkeyup="searchEnrollments()"
       style="width: 260px;"
     >
+    <!-- Export Excel -->
+            <button
+              class="btn btn-success"
+              onclick="exportEnrollmentsExcel()"
+            >
+              匯出 Excel
+            </button>
+
+            <!-- Export PDF -->
+            <button
+              class="btn btn-danger"
+              onclick="exportEnrollmentsPDF()"
+            >
+              匯出 PDF
+            </button>
 
     <button
       class="btn btn-primary"
@@ -1086,21 +1102,7 @@
     <tbody id="enrollmentTableBody"></tbody>
   </table>
 
-  <!-- Export Excel -->
-            <button
-              class="btn btn-success"
-              onclick="exportExcel()"
-            >
-              匯出 Excel
-            </button>
-
-            <!-- Export PDF -->
-            <button
-              class="btn btn-danger"
-              onclick="exportPDF()"
-            >
-              匯出 PDF
-            </button>
+  
   <!-- Add Enrollment Modal -->
 <div
   class="modal fade"
